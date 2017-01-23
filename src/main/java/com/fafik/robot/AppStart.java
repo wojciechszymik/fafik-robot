@@ -22,9 +22,9 @@ public class AppStart {
         final ActorMaterializer materializer = ActorMaterializer.create(system);
 
         // HttpApp.bindRoute expects a route being provided by HttpApp.createRoute
-        GoPiGoAdapter goPiGoAdapter = new GoPiGoAdapterMock();
+        GoPiGoAdapter goPiGoAdapter = new GoPiGoAdapterDummy();
         if(args.length == 1 && "MOCK".equals(args[0])){
-            goPiGoAdapter = new GoPiGoAdapterMock();
+            goPiGoAdapter = new GoPiGoAdapterDummy();
         }else {
             goPiGoAdapter = new GoPiGoAdapterImpl();
         }

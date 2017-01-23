@@ -7,4 +7,8 @@ import java.io.IOException;
  */
 public interface MovingStrategy {
     void move(Command command) throws IOException;
+
+    boolean isTurning();
+
+    boolean isDriving();
 }

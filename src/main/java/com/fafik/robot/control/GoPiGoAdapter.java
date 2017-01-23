@@ -7,13 +7,13 @@ import java.io.IOException;
  */
 public interface GoPiGoAdapter {
 
-    void forward()throws IOException;
+    void forward();
 
-    void back()throws IOException;
+    void back();
 
-    void stop()throws IOException;
+    void stop();
 
-    void left() throws IOException;
+    void left();
 
-    void right() throws IOException;
+    void right();
 }

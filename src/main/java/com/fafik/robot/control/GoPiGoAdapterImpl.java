@@ -25,28 +25,48 @@ public class GoPiGoAdapterImpl implements GoPiGoAdapter, GopigoListener {
     }
 
     @Override
-    public void forward()throws IOException {
-        gopigo.motion.forward(false);
+    public void forward() {
+        try {
+            gopigo.motion.forward(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void back()throws IOException {
-        gopigo.motion.backward(false);
+    public void back() {
+        try {
+            gopigo.motion.backward(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void stop()throws IOException {
-        gopigo.motion.stop();
+    public void stop() {
+        try {
+            gopigo.motion.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void left() throws IOException {
-        gopigo.motion.left();
+    public void left() {
+        try {
+            gopigo.motion.left();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void right() throws IOException {
-        gopigo.motion.right();
+    public void right() {
+        try {
+            gopigo.motion.right();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

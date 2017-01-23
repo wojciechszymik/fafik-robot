@@ -15,7 +15,7 @@ public class DeviceManager {
 
     public void move(Command command){
 
-        System.out.println("command = " + command.getType() + " time: " + command.getTimeStamp());
+        System.out.println(command);
         try {
             movingStrategy.move(command);
         } catch (IOException e) {
