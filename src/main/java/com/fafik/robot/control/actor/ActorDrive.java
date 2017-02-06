@@ -122,7 +122,4 @@ public class ActorDrive extends AbstractLoggingActor {
         return activeCommand;
     }
 
-    public boolean isDriving() {
-        return driving;
-    }
 }
