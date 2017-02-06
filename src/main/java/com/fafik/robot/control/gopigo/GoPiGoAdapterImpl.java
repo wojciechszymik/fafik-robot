@@ -1,4 +1,4 @@
-package com.fafik.robot.control;
+package com.fafik.robot.control.gopigo;
 
 import com.dexterind.gopigo.Gopigo;
 import com.dexterind.gopigo.GopigoListener;
@@ -27,6 +27,7 @@ public class GoPiGoAdapterImpl implements GoPiGoAdapter, GopigoListener {
     @Override
     public void forward() {
         try {
+            System.out.println("going forward");
             gopigo.motion.forward(false);
         } catch (IOException e) {
             e.printStackTrace();
@@ -36,6 +37,7 @@ public class GoPiGoAdapterImpl implements GoPiGoAdapter, GopigoListener {
     @Override
     public void back() {
         try {
+            System.out.println("going back");
             gopigo.motion.backward(false);
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,6 +47,7 @@ public class GoPiGoAdapterImpl implements GoPiGoAdapter, GopigoListener {
     @Override
     public void stop() {
         try {
+            System.out.println("stop");
             gopigo.motion.stop();
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,6 +57,7 @@ public class GoPiGoAdapterImpl implements GoPiGoAdapter, GopigoListener {
     @Override
     public void left() {
         try {
+            System.out.println("going left");
             gopigo.motion.left();
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,6 +67,7 @@ public class GoPiGoAdapterImpl implements GoPiGoAdapter, GopigoListener {
     @Override
     public void right() {
         try {
+            System.out.println("going right");
             gopigo.motion.right();
         } catch (IOException e) {
             e.printStackTrace();

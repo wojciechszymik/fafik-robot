@@ -1,4 +1,4 @@
-package com.fafik.robot.control;
+package com.fafik.robot.control.gopigo;
 
 import java.io.IOException;
 

@@ -1,13 +1,16 @@
 package com.fafik.robot.control;
 
+import com.fafik.robot.control.gopigo.GoPiGoAdapter;
+import com.fafik.robot.control.protocol.Command;
+import com.fafik.robot.control.protocol.CommandName;
+
 import java.io.IOException;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Created by Wojciech on 18.01.2017.
  */
-public class StandardMovingStrategy implements MovingStrategy {
+public class StandardDriveStrategy implements DriveStrategy {
 
     private GoPiGoAdapter goPiGoAdapter;
 
@@ -16,22 +19,22 @@ public class StandardMovingStrategy implements MovingStrategy {
     private boolean turning = false;
     private boolean driving = false;
 
-    public StandardMovingStrategy(GoPiGoAdapter goPiGoAdapter) {
+    public StandardDriveStrategy(GoPiGoAdapter goPiGoAdapter) {
         this.goPiGoAdapter = goPiGoAdapter;
     }
 
     @Override
     public void move(Command command)throws IOException {
 
-        if(command.getCommandName() == CommandName.FORWARD){
+        if(command.getName() == CommandName.FORWARD){
             forward(command);
-        } else if(command.getCommandName() == CommandName.BACK){
+        } else if(command.getName() == CommandName.BACK){
             back(command);
-        } else if(command.getCommandName() == CommandName.RIGHT){
+        } else if(command.getName() == CommandName.RIGHT){
             right(command);
-        } else if(command.getCommandName() == CommandName.LEFT){
+        } else if(command.getName() == CommandName.LEFT){
             left(command);
-        } else if(command.getCommandName() == CommandName.STOP_ALL){
+        } else if(command.getName() == CommandName.STOP_ALL){
             stop(command);
         }
 
@@ -114,9 +117,9 @@ public class StandardMovingStrategy implements MovingStrategy {
 
     private void wait(Command command) {
         long waitStart = System.currentTimeMillis();
-        while(waitStart + command.getCommandDuration() > System.currentTimeMillis()){
+        while(waitStart + command.getDuration() > System.currentTimeMillis()){
             try {
-                Thread.sleep(command.getCommandDuration());
+                Thread.sleep(command.getDuration());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -136,15 +139,13 @@ public class StandardMovingStrategy implements MovingStrategy {
 
     private void setLastCommand(Command command) {
         lastCommand = command;
-        System.out.println("going = " + command.getCommandName());
+        System.out.println("going = " + command.getName());
     }
 
-    @Override
     public boolean isTurning() {
         return turning;
     }
 
-    @Override
     public boolean isDriving() {
         return driving;
     }

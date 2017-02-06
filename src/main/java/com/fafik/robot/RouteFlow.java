@@ -7,8 +7,8 @@ import akka.http.javadsl.server.AllDirectives;
 import akka.http.javadsl.server.Route;
 import akka.japi.JavaPartialFunction;
 import akka.stream.javadsl.Flow;
-import com.fafik.robot.control.Command;
-import com.fafik.robot.control.DeviceManager;
+import com.fafik.robot.control.DriveStrategy;
+import com.fafik.robot.control.protocol.Command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -18,34 +18,25 @@ import java.io.IOException;
  */
 public class RouteFlow extends AllDirectives {
 
-    private DeviceManager deviceManager;//= new DeviceManager();
+    private DriveStrategy driveStrategy;
+    private ObjectMapper objectMapper;
 
-    ObjectMapper objectMapper;
-
-    public RouteFlow(DeviceManager deviceManager) {
-        this.deviceManager = deviceManager;
+    public RouteFlow(DriveStrategy driveStrategy) {
+        this.driveStrategy = driveStrategy;
         this.objectMapper = new ObjectMapper();
     }
 
     public Route createRoute() {
-        return path("control", () -> handleWebSocketMessages(greeter()));
+        return path("control", () -> handleWebSocketMessages(control()));
     }
 
-    public Flow<Message, Message, NotUsed> greeter() {
-        System.out.println("init greeter");
+    public Flow<Message, Message, NotUsed> control() {
+        System.out.println("init control");
         return Flow.<Message>create()
                         .collect(new JavaPartialFunction<Message, Message>() {
                             @Override
                             public Message apply(Message msg, boolean isCheck) throws Exception {
-                                if (isCheck) {
-                                    if (msg.isText()) {
-                                        return null;
-                                    } else {
-                                        throw noMatch();
-                                    }
-                                } else {
-                                    return handleTextMessage(msg.asTextMessage());
-                                }
+                                return handleTextMessage(msg.asTextMessage());
                             }
                         });
     }
@@ -55,8 +46,8 @@ public class RouteFlow extends AllDirectives {
 
         try {
             Command command = objectMapper.readValue(msg.getStrictText(), Command.class);
-            deviceManager.move(command);
-            return TextMessage.create("Message received: " + command.getCommandName());
+            driveStrategy.move(command);
+            return TextMessage.create("Message received: " + command.getName());
         } catch (IOException e) {
             e.printStackTrace();
             return TextMessage.create("Error during parsing a message: " + msg.getStrictText());

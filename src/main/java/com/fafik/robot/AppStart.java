@@ -11,6 +11,10 @@ import akka.http.javadsl.Http;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
 import com.fafik.robot.control.*;
+import com.fafik.robot.control.gopigo.GoPiGoAdapter;
+import com.fafik.robot.control.gopigo.GoPiGoAdapterDummy;
+import com.fafik.robot.control.gopigo.GoPiGoAdapterFactory;
+import com.fafik.robot.control.gopigo.GoPiGoAdapterImpl;
 
 import java.io.IOException;
 import java.util.concurrent.CompletionStage;
@@ -18,19 +22,14 @@ import java.util.concurrent.CompletionStage;
 public class AppStart {
     public static void main(String[] args) throws IOException {
         // boot up server using the route as defined below
-        final ActorSystem system = ActorSystem.create();
+        final ActorSystem system = ActorSystem.create("DriveActorSystem");
         final ActorMaterializer materializer = ActorMaterializer.create(system);
 
-        // HttpApp.bindRoute expects a route being provided by HttpApp.createRoute
-        GoPiGoAdapter goPiGoAdapter = new GoPiGoAdapterDummy();
-        if(args.length == 1 && "MOCK".equals(args[0])){
-            goPiGoAdapter = new GoPiGoAdapterDummy();
-        }else {
-            goPiGoAdapter = new GoPiGoAdapterImpl();
-        }
-        DeviceManager deviceManager = new DeviceManager(new StandardMovingStrategy(goPiGoAdapter));
+        GoPiGoAdapter goPiGoAdapter = GoPiGoAdapterFactory.create(args.length > 0 ? args[0] : "MOCK");
+        DriveStrategyFactory factory = new DriveStrategyFactory(system);
+        DriveStrategy driveStrategy = factory.create(goPiGoAdapter, args.length > 1 ? args[1]: "STANDARD");
 
-        final RouteFlow routeFlow = new RouteFlow(deviceManager);
+        final RouteFlow routeFlow = new RouteFlow(driveStrategy);
         final Route route = routeFlow.createRoute();
 
         final Flow<HttpRequest, HttpResponse, NotUsed> handler = route.flow(system, materializer);
@@ -43,6 +42,5 @@ public class AppStart {
             return null;
         });
 
-        //system.terminate();
     }
 }
